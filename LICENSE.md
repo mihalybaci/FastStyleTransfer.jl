@@ -1,6 +1,6 @@
 The FastStyleTransfer.jl package is licensed under the MIT "Expat" License:
 
-> Copyright (c) 2018: Avik Pal.
+> Copyright (c) 2021: Avik Pal, Michael Alexander.
 >
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal

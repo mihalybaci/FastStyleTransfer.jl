@@ -43,7 +43,14 @@ function train(train_data_path, batch_size, η, style_image_path, epochs, model_
 
         total_loss
     end
+    #=
+    for (x,y) in train_data
+  gs = Flux.gradient(ps) do
+    loss(x,y)
+  end
+  Flux.Optimise.update!(opt, ps, gs)
 
+    =#
     Flux.@epochs epochs begin
         for d in train_dataset
             size(d, 4) != batch_size && continue

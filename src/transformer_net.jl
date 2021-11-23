@@ -32,3 +32,16 @@ TransformerNet2() = Chain(ConvPad(3=>32, (3,3)),
                           ConvTranspose((3, 3), 64=>32, stride = (2, 2), pad = (1, 1), output_pad = (1, 1)),
                           BatchNorm(32, relu),
                           ConvTranspose((3, 3), 32=>3, pad = (1, 1)))
+
+TransformerNet3() = Chain(ConvPad(3=>32, (3,3)),
+                          InstanceNorm(32, relu),
+                          ConvPad(32=>64, (3,3), (2,2)),
+                          InstanceNorm(64, relu),
+                          ConvPad(64=>128, (3,3), (2,2)),
+                          InstanceNorm(128, relu),
+                          [ResidualBlock(128) for i in 1:5]...,
+                          ConvTranspose((3, 3), 128=>64, stride = (2, 2), pad = (1, 1), output_pad = (1, 1)),
+                          InstanceNorm(64, relu),
+                          ConvTranspose((3, 3), 64=>32, stride = (2, 2), pad = (1, 1), output_pad = (1, 1)),
+                          InstanceNorm(32, relu),
+                          ConvTranspose((3, 3), 32=>3, pad = (1, 1)))

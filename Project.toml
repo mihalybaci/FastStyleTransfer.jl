@@ -1,0 +1,7 @@
+[deps]
+BSON = "fbb218c0-5317-5bc6-957e-2ee96dd4b1f0"
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+Flux = "587475ba-b771-5e3f-ad9e-33799f191a9c"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+Metalhead = "dbeba491-748d-5e0e-a39e-b530a07fa0cc"
+NNlib = "872c559c-99b0-510c-b3b7-b6c96a88d5cd"

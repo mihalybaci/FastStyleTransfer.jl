@@ -9,7 +9,6 @@ mutable struct vgg19
     slice4
 end
 
-Flux.treelike(vgg19)
 
 function vgg19()
     vgg = VGG19().layers

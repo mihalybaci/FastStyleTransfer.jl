@@ -61,9 +61,14 @@ function gram_matrix(x)
     cat(3, [features[i]' * features[i] for i in 1:b]...) / Float32(w * h * ch)
 end
 
+##
+##
+## Deprecated?
+##
+##
 #----------------------------Extension of certain functions------------------------------
-using Base.std
+#using Base.std
 
 # Not as per the defination. Just as hack to get it working
-Base.std(x::TrackedArray, dim::Array; mean = Base.mean(x, dim)) =
-    sqrt.(sum((x .- mean).^2, dim) ./ (prod(size(x)[dim])-1))
+#Base.std(x::TrackedArray, dim::Array; mean = Base.mean(x, dim)) =
+#    sqrt.(sum((x .- mean).^2, dim) ./ (prod(size(x)[dim])-1))

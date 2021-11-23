@@ -62,8 +62,6 @@ function train(train_data_path, batch_size, η, style_image_path, epochs, model_
 
         transformer = transformer |> cpu
         BSON.@save model_save_path transformer
-        transformer = transformer |> gpu
-        optimizer = Flux.ADAM(params(transformer), η)
     end
 end
 

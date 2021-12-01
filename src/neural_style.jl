@@ -2,23 +2,33 @@
 
 #------------------------Utilities to Train new models----------------------------
 
+"""
+Train a model for style transfer.
+"""
 function train(train_data_path, batch_size, η, style_image_path, epochs, model_save_path, content_weight, style_weight, model = TransformerNet; images = 10000)
     train_dataset = load_dataset(train_data_path, batch_size, images)
+    @info "Loading initial model weights"
     try
         BSON.@load model_save_path transformer
     catch
         transformer = model()
     end
+    @info "Model weights to GPU"
     transformer = transformer |> gpu
     optimizer = Flux.ADAM(η)
+    @info "Loading style image"
     style = load_image(style_image_path, size_img = 224)
+    @info "Style image to GPU"
     style = repeat(reshape(style, size(style)..., 1), outer = (1,1,1,batch_size)) |> gpu
     im_mean2 = reshape([0.485, 0.458, 0.408], (1,1,3,1)) * 255 |> gpu # Reinitialize to avoid gpu error
 
+    @info "Model to GPU"
     vgg = vgg19() |> gpu
     features_style = vgg(style)
+    @info "Calculating gram matrix"
     gram_style = [gram_matrix(y) for y in features_style]
 
+    @info "Defining loss function"
     function loss_function(x)
         y = transformer(x)
 
@@ -51,8 +61,13 @@ function train(train_data_path, batch_size, η, style_image_path, epochs, model_
   Flux.Optimise.update!(opt, ps, gs)
 
     =#
+    @info "Beginning training cycle"
+    ecount = 1
     Flux.@epochs epochs begin
+        @info "Epoch $ecount..."
+        dcount = 1
         for d in train_dataset
+            @info "Data section $dcount..."
             size(d, 4) != batch_size && continue
             gs = Flux.gradient(params(transformer)) do 
                 loss_function(d |> gpu)
@@ -62,11 +77,15 @@ function train(train_data_path, batch_size, η, style_image_path, epochs, model_
 
         transformer = transformer |> cpu
         BSON.@save model_save_path transformer
+        ecount += 1
     end
 end
 
 #----------------------------------Utilities to Stylize Images--------------------------------
 
+"""
+Stylize an image based on a style model.
+"""
 function stylize(image_path, model_path = "../models/trained_network_1.bson"; save_path = "", display_img::Bool = true)
     info("Starting to Load Model")
     BSON.@load model_path transformer

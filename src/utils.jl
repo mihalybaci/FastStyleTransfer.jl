@@ -10,7 +10,7 @@ function load_image(filename; size_img::Int = -1, scale::Int = -1)
     img = load(filename)
     global original_size = size(img)
     if size_img != -1
-        img = imresize(img, (size_img,size_img))
+        img = imresize(img, (size_img, size_img))
     elseif scale != -1
         dims = size(img, 1)
         img = imresize(img, (dims, dims))
@@ -40,9 +40,9 @@ function load_dataset(path, batch, total)
     for (counts, i) in enumerate(paths)
         img = load_image(i, size_img = 224)
         ndims(img) == 3 ? push!(images, img) : total -= 1 # Hack to avoid errors in case of MSCOCO
-        counts % 100 == 0 && info("$counts images have been loaded")
+        counts % 100 == 0 && @info "$counts images have been loaded"
     end
-    [cat(4, images[i]...) for i in partition(1:total, batch)]
+    [cat(images[i]..., dims=4) for i in Iterators.partition(1:total, batch)]
 end
 
 # NOTE: The wrapper is quite slow
@@ -58,7 +58,7 @@ function gram_matrix(x)
     w, h, ch, b = size(x)
     local features = reshape(x, w*h, ch, b)
     features = [features[:,:,i] for i in 1:b]
-    cat(3, [features[i]' * features[i] for i in 1:b]...) / Float32(w * h * ch)
+    cat([features[i]' * features[i] for i in 1:b]..., dims=4) / Float32(w * h * ch)
 end
 
 ##

@@ -11,7 +11,7 @@ end
 
 
 function vgg19()
-    vgg = VGG19().layers
+    vgg = VGG19().layers[1]  # get only the first set of layers in the chain
     slice1 = Chain(vgg[1:5]...)
     slice2 = Chain(vgg[6:10]...)
     slice3 = Chain(vgg[11:15]...)

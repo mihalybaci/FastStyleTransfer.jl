@@ -4,6 +4,8 @@ module FastStyleTransfer
 
 using Flux, Metalhead, Images, CUDA, NNlib, BSON
 
+CUDA.allowscalar(false)
+
 export train, stylize
 
 include("utils.jl")
